@@ -147,14 +147,14 @@ endef
 	$(call GOCOMPILE,build)
 
 .PHONY: build
-build: gopath moddownload genlocalfiles .build
+build: gopath genlocalfiles .build
 
 .PHONY: .install
 .install:
 	$(call GOCOMPILE,install)
 
 .PHONY: skydive
-skydive: gopath moddownload genlocalfiles .install
+skydive: gopath genlocalfiles .install
 
 .PHONY: skydive.clean
 skydive.clean:
@@ -167,10 +167,10 @@ ifneq ($(OFFLINE), true)
 endif
 
 .PHONY: genlocalfiles
-genlocalfiles: $(EXTRA_BUILD_TARGET) .proto .typescript .bindata .ovnmodel .gendecoder .easyjson .vppbinapi
+genlocalfiles: $(EXTRA_BUILD_TARGET) .proto .typescript .bindata .ovnmodel .gendecoder .vppbinapi
 
 .PHONY: touchlocalfiles
-touchlocalfiles: .proto.touch .typescript.touch .bindata.touch .gendecoder.touch .easyjson.touch
+touchlocalfiles: .proto.touch .typescript.touch .bindata.touch .gendecoder.touch
 
 .PHONY: clean
 clean: skydive.clean test.functionals.clean contribs.clean .ebpf.clean .easyjson.clean .proto.clean .gendecoder.clean .ovnmodel.clean .typescript.clean .vppbinapi.clean swagger.clean

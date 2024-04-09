@@ -29,7 +29,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/skydive-project/skydive/graffiti/api/rest"
 	"github.com/skydive-project/skydive/graffiti/api/types"
-	"github.com/skydive-project/skydive/graffiti/assets"
 	"github.com/skydive-project/skydive/graffiti/graph"
 	"github.com/skydive-project/skydive/graffiti/graph/traversal"
 	shttp "github.com/skydive-project/skydive/graffiti/http"
@@ -199,12 +198,7 @@ func (w *WorkflowAPIHandler) registerEndPoints(s *shttp.Server, authBackend shtt
 }
 
 // RegisterWorkflowAPI registers a new workflow api handler
-func RegisterWorkflowAPI(apiServer *Server, g *graph.Graph, parser *traversal.GremlinTraversalParser, assets assets.Assets, authBackend shttp.AuthenticationBackend) (*WorkflowAPIHandler, error) {
-	runtime, err := NewWorkflowRuntime(g, parser, apiServer, assets)
-	if err != nil {
-		return nil, err
-	}
-
+func RegisterWorkflowAPI(apiServer *Server, g *graph.Graph, parser *traversal.GremlinTraversalParser, authBackend shttp.AuthenticationBackend, runtime *js.Runtime) (*WorkflowAPIHandler, error) {
 	workflowAPIHandler := &WorkflowAPIHandler{
 		BasicAPIHandler: rest.BasicAPIHandler{
 			ResourceHandler: &WorkflowResourceHandler{},

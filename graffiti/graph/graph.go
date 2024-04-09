@@ -23,8 +23,8 @@ import (
 	"reflect"
 	"strings"
 
-	uuid "github.com/nu7hatch/gouuid"
 	"github.com/safchain/insanelock"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/skydive-project/skydive/graffiti/filters"
 	"github.com/skydive-project/skydive/graffiti/getter"
@@ -347,12 +347,10 @@ func NewEventHandler(maxEvents int) *EventHandler {
 // GenID helper generate a node Identifier
 func GenID(s ...string) Identifier {
 	if len(s) > 0 {
-		u, _ := uuid.NewV5(uuid.NamespaceOID, []byte(strings.Join(s, "/")))
-		return Identifier(u.String())
+		return Identifier(uuid.NewV5(uuid.NamespaceOID, strings.Join(s, "/")).String())
 	}
 
-	u, _ := uuid.NewV4()
-	return Identifier(u.String())
+	return Identifier(uuid.NewV4().String())
 }
 
 func (e *graphElement) GetFieldBool(field string) (_ bool, err error) {
@@ -584,6 +582,21 @@ func (n *Node) String() string {
 		return ""
 	}
 	return string(b)
+}
+
+func (n *Node) Copy() *Node {
+	return &Node{
+		graphElement: graphElement{
+			ID:        n.ID,
+			Host:      n.Host,
+			Origin:    n.Origin,
+			CreatedAt: n.CreatedAt,
+			UpdatedAt: n.UpdatedAt,
+			DeletedAt: n.DeletedAt,
+			Revision:  n.Revision,
+			Metadata:  n.Metadata.Copy(),
+		},
+	}
 }
 
 // UnmarshalJSON custom unmarshal function
@@ -1284,8 +1297,7 @@ func (g *Graph) CreateEdge(i Identifier, p *Node, c *Node, m Metadata, t Time, h
 	}
 
 	if i == "" {
-		u, _ := uuid.NewV5(uuid.NamespaceOID, []byte(p.ID+c.ID))
-		i = Identifier(u.String())
+		i = Identifier(uuid.NewV5(uuid.NamespaceOID, string(p.ID+c.ID)).String())
 	}
 
 	return CreateEdge(i, p, c, m, t, hostname, g.origin)

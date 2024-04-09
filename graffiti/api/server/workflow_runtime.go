@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/robertkrimen/otto"
+
 	"github.com/skydive-project/skydive/graffiti/api/types"
 	"github.com/skydive-project/skydive/graffiti/assets"
 	"github.com/skydive-project/skydive/graffiti/graph"
@@ -30,8 +31,9 @@ import (
 	"github.com/skydive-project/skydive/graffiti/js"
 )
 
-// NewWorkflowRuntime returns a new workflow runtime
-func NewWorkflowRuntime(g *graph.Graph, tr *traversal.GremlinTraversalParser, server *Server, assets assets.Assets) (*js.Runtime, error) {
+// NewRuntime returns a new JavaScript runtime where accesses to resources are done
+// directly using the handlers, not through HTTP requests.
+func NewRuntime(g *graph.Graph, tr *traversal.GremlinTraversalParser, server *Server, assets assets.Assets) (*js.Runtime, error) {
 	runtime, err := js.NewRuntime(assets)
 	if err != nil {
 		return nil, err
